@@ -181,26 +181,26 @@ var cnUtil = function(currencyConfig) {
 		return C;
 	}
 
-	this.decode_rct_ecdh = function(ecdh, key) {
+	this.decode_rct_ecdh = function (ecdh, key) {
 		if (ecdh.amount.length !== 16) {
-            //old version
-            var first = this.hash_to_scalar(key);
-            var second = this.hash_to_scalar(first);
-            return {
-                "mask": this.sc_sub(ecdh.mask, first),
-                "amount": this.sc_sub(ecdh.amount, second)
-            };
-        } else {
-            //v2, with deterministic mask
-            var mask = this.hash_to_scalar("636f6d6d69746d656e745f6d61736b" + key); //"commitment_mask"
+			//old version
+			var first = this.hash_to_scalar(key);
+			var second = this.hash_to_scalar(first);
+			return {
+				"mask": this.sc_sub(ecdh.mask, first),
+				"amount": this.sc_sub(ecdh.amount, second)
+			};
+		} else {
+			//v2, with deterministic mask
+			var mask = this.hash_to_scalar("636f6d6d69746d656e745f6d61736b" + key); //"commitment_mask"
 			var amtkey = this.cn_fast_hash("616d6f756e74" + key); //"amount"
-            var amount = this.hex_xor(ecdh.amount, amtkey.slice(0,16));
-            amount += "000000000000000000000000000000000000000000000000"; //pad to 64 chars
-            return {
-                "mask": mask,
-                "amount": amount
-            };
-        }
+			var amount = this.hex_xor(ecdh.amount, amtkey.slice(0, 16));
+			amount += "000000000000000000000000000000000000000000000000"; //pad to 64 chars
+			return {
+				"mask": mask,
+				"amount": amount
+			};
+		}
 	};
 
 	this.encode_rct_ecdh = function(ecdh, key) {
